@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
-import Calculator from './Calculator';
-import Checkboxes from './Checkboxes';
+// import Calculator from './Calculator';
+// import Checkboxes from './Checkboxes';
+
+import TempConverter from './TempConverter';
 
 class App extends Component {
 
   render() {
     return (
       <div>
-        <Checkboxes />
+        <TempConverter />
       </div>
     );
   }
 }
-
-// What's a good example that demonstrates state lifting? The temp conversion has too much helper functions...
-
-// Exercise?
 
 export default App;
