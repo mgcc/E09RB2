@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './styles/SignUpForm.css';
+import Locations from './lib/provinces';
 
 class SignUpForm extends Component {
 
@@ -13,12 +14,17 @@ class SignUpForm extends Component {
       repeatPassword: '',
       mobile: '',
       birthday: '',
+      province: '',
+      municipality: '',
+      munChoices: [],
       firstNameMissing: false,
       lastNameMissing: false,
       passwordMissing: false,
       rPasswordMissing: false,
       passwordDontMatch: false,
-      birthdayMissing: false
+      birthdayMissing: false,
+      provinceMissing: false,
+      tooYoung: false
     }
 
     this.firstNameChange = this.firstNameChange.bind(this);
@@ -27,6 +33,7 @@ class SignUpForm extends Component {
     this.rPasswordChange = this.rPasswordChange.bind(this);
     this.mobileChange = this.mobileChange.bind(this);
     this.birthdayChange = this.birthdayChange.bind(this);
+    this.provinceChange = this.provinceChange.bind(this);
     this.createAccount = this.createAccount.bind(this);
   }
 
@@ -52,10 +59,18 @@ class SignUpForm extends Component {
 
   birthdayChange(e) {
     this.setState({ birthday: e.target.value });
+  }
 
-    const date = e.target.value;
-    console.log(date);
-    console.log(typeof(date));
+  provinceChange(e) {
+    this.setState({ province: e.target.value });
+
+    const province = Locations.provinces.find((element) => {
+      return (element.id == e.target.value)
+    });
+
+    console.log(province);
+
+    this.setState({ munChoices: province.municipalities });
   }
 
   createAccount(e) {
@@ -93,6 +108,21 @@ class SignUpForm extends Component {
       this.setState({ passwordDontMatch: false });
     }
 
+    const birthday = new Date(this.state.birthday);
+    const one_day = 1000*60*60*24;
+
+    const bday_ms = birthday.getTime();
+    const now_ms = (new Date()).getTime();
+
+    const difference = now_ms - bday_ms;
+
+    const age = Math.round(difference/one_day/365);
+
+    if (age < 18) {
+      this.setState({ tooYoung: true });
+    } else {
+      this.setState({ tooYoung: false });
+    }
   }
 
   render() {
@@ -158,7 +188,21 @@ class SignUpForm extends Component {
               value={this.state.birthday}
               onChange={this.birthdayChange}
               />
+            <span className="error-message">{ this.state.tooYoung ? 'Too Young!' : '' }</span>
           </div>
+
+          <LocationSelect
+            options={Locations.provinces}
+            value={this.state.province}
+            handler={this.provinceChange}
+            label="Province"
+            />
+
+          <select className="dropdown">
+            {
+              this.state.munChoices.map(item => <option key={item}>{item}</option>)
+            }
+          </select>
 
           <div className="input-row">
             <button id="signup-button" onClick={this.createAccount} >Create Account</button>
@@ -167,6 +211,25 @@ class SignUpForm extends Component {
 
       </div>
     )
+  }
+}
+
+class LocationSelect extends Component {
+  render() {
+    return (
+      <div className="input-row">
+        <select className="dropdown" onChange={this.props.handler}>
+          <option selected value="0" disabled>{this.props.label}</option>
+          {
+            this.props.options.map((option) => {
+              return (
+                <option key={option.id} value={option.id}>{option.name}</option>
+              )
+            })
+          }
+        </select>
+      </div>
+    );
   }
 }
 
