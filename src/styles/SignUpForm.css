@@ -1,3 +1,7 @@
+.input-row {
+  margin-top: 10px;
+}
+
 .input {
   border: 1px solid #bdc7d8;
   border-radius: 5px;
@@ -11,23 +15,10 @@
   padding: 8px 10px 8px 10px;
 }
 
-.input-required-prompt {
-  border: 1px solid red;
-  border-radius: 5px;
-  padding: 8px 10px 8px 10px;
-  margin-right: 10px;
-}
-
-.input-row {
-  margin-top: 10px;
-}
-
-
 .error-message {
   color: red;
   margin-left: 20px;
 }
-
 
 #signup-button {
   background-color: rgb(105, 167, 78);
@@ -39,7 +30,4 @@
   border: 1px solid;
   font-weight: bold;
   padding: 7px 20px;
-  /* margin-top: 10px; */
-  /* margin-bottom: 10px; */
-
 }

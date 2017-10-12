@@ -31,7 +31,6 @@ class SignUpForm extends Component {
     this.lastnameChange = this.lastnameChange.bind(this);
     this.passwordChange = this.passwordChange.bind(this);
     this.rPasswordChange = this.rPasswordChange.bind(this);
-    this.mobileChange = this.mobileChange.bind(this);
     this.birthdayChange = this.birthdayChange.bind(this);
     this.provinceChange = this.provinceChange.bind(this);
     this.createAccount = this.createAccount.bind(this);
@@ -53,10 +52,6 @@ class SignUpForm extends Component {
     this.setState({ repeatPassword: e.target.value });
   }
 
-  mobileChange(e) {
-    this.setState({ mobile: e.target.value });
-  }
-
   birthdayChange(e) {
     this.setState({ birthday: e.target.value });
   }
@@ -67,8 +62,6 @@ class SignUpForm extends Component {
     const province = Locations.provinces.find((element) => {
       return (element.id == e.target.value)
     });
-
-    console.log(province);
 
     this.setState({ munChoices: province.municipalities });
   }
@@ -132,52 +125,54 @@ class SignUpForm extends Component {
 
         <form>
           <div id="name" className="input-row">
-
             <input
-              className={ this.state.firstNameMissing ? 'input-required-prompt' : 'input' }
+              className="input"
               type="text"
               placeholder="First name"
               value={this.state.firstName}
               onChange={this.firstNameChange}
               />
+            <span className="error-message">{ this.state.firstNameMissing ? 'First name is required' : '' }</span>
+          </div>
+
+          <div className="input-row">
             <input
-              className={ this.state.lastNameMissing ? 'input-required-prompt' : 'input' }
+              className="input"
               type="text"
               placeholder="Last name"
               value={this.state.lastname}
               onChange={this.lastnameChange}
               />
+            <span className="error-message">{ this.state.lastNameMissing ? 'Last Name is required' : '' }</span>
           </div>
 
           <div className="input-row">
             <input
-              className={ this.state.passwordMissing ? 'input-required-prompt' : 'input' }
+              className="input"
               type="password"
               placeholder="Password"
               value={this.state.password}
               onChange={this.passwordChange}
               />
 
+            <span className="error-message">
+              { this.state.passwordMissing ? 'Password is required' : '' }
+            </span>
+          </div>
+
+          <div className="input-row">
             <input
-              className={ this.state.rPasswordMissing ? 'input-required-prompt' : 'input' }
+              className="input"
               type="password"
               placeholder="Repeat Password"
               value={this.state.rPassword}
               onChange={this.rPasswordChange}
               />
-
-            <span className="error-message">{ this.state.passwordDontMatch ? 'Passwords Don\'t Match' : '' }</span>
-          </div>
-
-          <div
-            className="input-row">
-            <input
-              type="text"
-              className="input"
-              placeholder="Mobile number or email"
-              value={this.state.mobile}
-              onChange={this.mobileChange}
-              />
+            <span className="error-message">
+              {
+                this.state.rPasswordMissing ? 'Please repeat password': (this.state.passwordDontMatch ? 'Passwords don\'t match ': '')
+              }
+            </span>
           </div>
 
           <div className="input-row">
@@ -188,7 +183,7 @@ class SignUpForm extends Component {
               value={this.state.birthday}
               onChange={this.birthdayChange}
               />
-            <span className="error-message">{ this.state.tooYoung ? 'Too Young!' : '' }</span>
+            <span className="error-message">{ this.state.tooYoung ? 'You have to be at least 18 to sign up' : '' }</span>
           </div>
 
           <LocationSelect
@@ -198,7 +193,8 @@ class SignUpForm extends Component {
             label="Province"
             />
 
-          <select className="dropdown">
+          <select className="dropdown" defaultValue="0">
+            <option value="0" disabled>Municipality</option>
             {
               this.state.munChoices.map(item => <option key={item}>{item}</option>)
             }
@@ -218,8 +214,8 @@ class LocationSelect extends Component {
   render() {
     return (
       <div className="input-row">
-        <select className="dropdown" onChange={this.props.handler}>
-          <option selected value="0" disabled>{this.props.label}</option>
+        <select className="dropdown" onChange={this.props.handler} defaultValue="0">
+          <option value="0" disabled>{this.props.label}</option>
           {
             this.props.options.map((option) => {
               return (
